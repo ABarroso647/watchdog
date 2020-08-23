@@ -10,7 +10,7 @@ from flask import request
 def download_blob(bucket_name, source_blob_name, destination_file_name):
     """Downloads a blob from the bucket."""
     try:
-        fileloc = os.path.dirname(os.path.abspath(__file__)) + "/key.json"
+        fileloc = os.path.dirname(os.path.realpath(__file__)) + "/key.json"
         print(os.path.dirname(os.path.abspath(__file__)))
         storage_client = storage.Client.from_service_account_json(fileloc)
         bucket = storage_client.bucket(bucket_name)
@@ -52,7 +52,7 @@ def point_system (value):
 
 
 def sequence(data):
-    folderpath = os.path.dirname(os.path.abspath(__file__))
+    folderpath = os.path.dirname(os.path.realpath(__file__))
     new_path = folderpath + data.decode("utf-8")
     bucket_name = "watchdog_image_bucket-123"
     if download_blob(bucket_name, data, new_path):
