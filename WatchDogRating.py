@@ -53,7 +53,7 @@ def point_system (value):
 
 def sequence(data):
     folderpath = os.path.dirname(os.path.realpath(__file__))
-    new_path = folderpath + data.decode("utf-8")
+    new_path = folderpath + "/" + data.decode("utf-8")
     bucket_name = "watchdog_image_bucket-123"
     if download_blob(bucket_name, data, new_path):
         cap = cv2.VideoCapture(new_path)
@@ -69,15 +69,17 @@ def sequence(data):
             if success and (int(i % (2 * fps)) == 0):
                 imgpath = folderpath + "/images/frame.jpg"
                 image = cv2.resize(image, (640, 480))
-                cv2.imwrite(imgpath, image)
-                time.sleep(0.25)  # call the ml here and ge tits response
+                #cv2.imwrite(imgpath, image)
+                #time.sleep(0.25)  # call the ml here and ge tits response
                 random_bool = random.getrandbits(9)
                 score += point_system(random_bool)
-                os.remove(imgpath)
+                #os.remove(imgpath)
                 inc += 1
             i += 1
         score /= inc
         score = int(score%100)
+        cv2.VideoCapture.release(cap)
+        os.remove(new_path)
         return str(score)
     return "-1"
 
