@@ -10,12 +10,13 @@ from flask import request
 def download_blob(bucket_name, source_blob_name, destination_file_name):
     """Downloads a blob from the bucket."""
     try:
-        fileloc = "E:/folder folder/WatchDogs/key.json"
+        fileloc = os.path.dirname(os.path.abspath(__file__)) + "/key.json"
+        print(os.path.dirname(os.path.abspath(__file__)))
         storage_client = storage.Client.from_service_account_json(fileloc)
         bucket = storage_client.bucket(bucket_name)
         blob = bucket.blob(source_blob_name)
         blob.download_to_filename(destination_file_name)
-        blob.delete()
+        #blob.delete()
         print(
             "Blob {} downloaded to {}.".format(
                 source_blob_name, destination_file_name
@@ -51,8 +52,8 @@ def point_system (value):
 
 
 def sequence(data):
-    folderpath = "E:/folder folder/WatchDogs/"
-    new_path = folderpath + str(data)
+    folderpath = os.path.dirname(os.path.abspath(__file__))
+    new_path = folderpath + data.decode("utf-8")
     bucket_name = "watchdog_image_bucket-123"
     if download_blob(bucket_name, data, new_path):
         cap = cv2.VideoCapture(new_path)
@@ -66,7 +67,7 @@ def sequence(data):
         while i <= (framecount - fps *5) and cap.isOpened():
             success, image = cap.read()
             if success and (int(i % (2 * fps)) == 0):
-                imgpath = folderpath + "images/frame.jpg"
+                imgpath = folderpath + "/images/frame.jpg"
                 image = cv2.resize(image, (640, 480))
                 cv2.imwrite(imgpath, image)
                 time.sleep(0.25)  # call the ml here and ge tits response
@@ -86,6 +87,7 @@ app = Flask(__name__)
 @app.route('/', methods=['POST'])
 def hello_world():
     data = request.data
+    print(type(data))
     score = sequence(data)
     return score
 
