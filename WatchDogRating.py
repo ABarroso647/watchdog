@@ -7,8 +7,7 @@ from flask import Flask, jsonify
 from flask import request
 
 
-def download_blob(bucket_name, source_blob_name, destination_file_name):
-    """Downloads a blob from the bucket."""
+def download_blob(bucket_name, source_blob_name, destination_file_name): 
     try:
         fileloc = os.path.dirname(os.path.realpath(__file__)) + "/key.json"
         print(os.path.dirname(os.path.abspath(__file__)))
